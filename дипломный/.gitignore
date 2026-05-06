@@ -1,0 +1,132 @@
+# ASP.NET Core / Visual Studio
+
+## Папки сборки
+bin/
+obj/
+dist/
+build/
+
+## Visual Studio cache/options
+.vs/
+.vscode/
+*.suo
+*.sln.docstates
+*.user
+*.userprefs
+*.xcodeproj/
+*.xcworkspace/
+
+## Временные файлы
+temp/
+tmp/
+*.tmp
+*.temp
+
+## Логи
+*.log
+logs/
+
+## NuGet
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+packages/
+.nuget/
+
+## ReSharper
+.resharper*
+_ReSharper*/
+*.DotSettings.user
+
+## IDE
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+## NPM (если используется)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+## Публикация
+PublishProfiles/
+*.PublishSettings
+
+## Runtime конфиги (сгенерированные)
+appsettings.Development.json (опционально - для локальной разработки)
+
+## Кэш браузера
+.cache/
+*.cache
+
+## OS файлы
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+## Тестовые артефакты
+TestResults/
+.coverage
+
+## Локальные переменные окружения
+.env
+.env.local
+
+## Сертификаты (не коммитить в публичный репо!)
+*.pfx
+*.pem
+*.key
+
+## Дебаг символы
+*.pdb
+
+## Профилирование
+*.prof
+*.trace
+
+## SQL Server
+*.mdf
+*.ldf
+*.ndf
+
+## User-specific файлы
+*.suo
+*.user
+*.sln.docstates
+
+## Webpack
+dist/
+*.bundle.js
+*.bundle.css
+
+## VS Code расширения
+.vscode/extensions.json
+
+## IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+
+## WebStorm
+.idea/
+*.iws
+
+## Visual Studio Code
+.vscode/
+
+## Mac
+.DS_Store
+
+## Windows
+Thumbs.db
+
+## Своякие файлы разработки (исключить при необходимости)
+debug.log
+test-results.xml
+coverage/

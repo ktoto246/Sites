@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌾</text></svg>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет | БХБ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        if (!localStorage.getItem('userId') || localStorage.getItem('userRole') !== 'client') {
+            window.location.replace('login.html');
+        }
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-agro mb-4 shadow-sm">
+    <div class="container">
+        <a class="navbar-brand mb-0 h1 fw-bold" href="index.html">БХБ</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active fw-bold" href="index.html">Дашборд</a>
+                </li>
+            </ul>
+            <button class="btn btn-warning btn-sm fw-bold me-3 text-dark rounded-pill shadow-sm" onclick="showPriceList()">
+                <i class="bi bi-tags-fill"></i> Прайс-лист услуг
+            </button>
+            <div class="d-flex align-items-center mt-3 mt-lg-0">
+                <a href="profile.html" class="btn btn-outline-light btn-sm me-3 border-0 fw-medium">Профиль</a>
+                <span id="userNameDisplay" class="text-white me-3 fw-bold">Загрузка...</span>
+                <button class="btn btn-outline-light btn-sm me-2 rounded-circle" id="themeToggle" title="Сменить тему">
+                    <i class="bi bi-moon-stars-fill"></i>
+                </button>
+                <div class="vr mx-2 bg-white opacity-25 d-none d-lg-block"></div>
+                <button id="logoutBtn" class="btn btn-outline-light btn-sm fw-bold ms-lg-2 mt-2 mt-lg-0">
+                    <i class="bi bi-box-arrow-right"></i> Выйти
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container pb-5">
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card dashboard-card border-0 bg-body">
+                <div class="card-body p-4 d-flex align-items-center">
+                    <div class="stat-icon-wrapper stat-icon-primary me-3 shadow-sm"><i class="bi bi-journals"></i></div>
+                    <div>
+                        <h6 class="text-muted fw-bold mb-1 text-uppercase small">Всего заявок</h6>
+                        <h2 class="mb-0 fw-bold" id="statTotal">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card dashboard-card border-0 bg-body">
+                <div class="card-body p-4 d-flex align-items-center">
+                    <div class="stat-icon-wrapper stat-icon-warning me-3 shadow-sm"><i class="bi bi-clock-history"></i></div>
+                    <div>
+                        <h6 class="text-muted fw-bold mb-1 text-uppercase small">В работе</h6>
+                        <h2 class="mb-0 fw-bold" id="statActive">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card dashboard-card border-0 bg-body">
+                <div class="card-body p-4 d-flex align-items-center">
+                    <div class="stat-icon-wrapper stat-icon-success me-3 shadow-sm"><i class="bi bi-check-circle-fill"></i></div>
+                    <div>
+                        <h6 class="text-muted fw-bold mb-1 text-uppercase small">Выполнено</h6>
+                        <h2 class="mb-0 fw-bold" id="statDone">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card dashboard-card border-0 bg-body">
+                <div class="card-body p-4 d-flex align-items-center border-start border-4 border-warning rounded-start-2">
+                    <div class="stat-icon-wrapper stat-icon-warning me-3 shadow-sm"><i class="bi bi-cash"></i></div>
+                    <div>
+                        <h6 class="text-muted fw-bold mb-1 text-uppercase small">Ждет оплаты</h6>
+                        <h2 class="mb-0 fw-bold text-warning" id="statToPay">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row gx-4 gy-4">
+        <div class="col-lg-8">
+            <div class="card dashboard-card border-0 bg-body h-100">
+                <div class="card-header bg-transparent border-0 pt-4 pb-0 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <h5 class="mb-0 fw-bold">Реестр моих заявок</h5>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <select class="form-select border-0 bg-body-tertiary shadow-sm rounded-pill px-3 fw-medium" id="filterCropSelect" style="max-width: 170px;">
+                            <option value="all">🌾 Все культуры</option>
+                        </select>
+                        <div class="btn-group btn-group-sm shadow-sm" role="group">
+                            <button type="button" class="btn btn-outline-secondary active fw-bold" onclick="setFilter('all', this)">Все</button>
+                            <button type="button" class="btn btn-outline-secondary fw-bold" onclick="setFilter('new', this)">Новые</button>
+                            <button type="button" class="btn btn-outline-secondary fw-bold" onclick="setFilter('active', this)">В работе</button>
+                            <button type="button" class="btn btn-outline-secondary fw-bold" onclick="setFilter('done', this)">Выполнены</button>
+                            <button type="button" class="btn btn-outline-danger fw-bold" onclick="setFilter('rejected', this)">Отклонены</button>
+                            <button type="button" class="btn btn-outline-warning fw-bold text-dark" onclick="setFilter('topay', this)">К оплате</button>
+                        </div>
+                        <button class="btn btn-success shadow-sm rounded-pill px-3 fw-bold" onclick="exportToExcel()">Excel</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-premium w-100 text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable('id')" class="cursor-pointer">ID <i class="bi bi-arrow-down-up small text-muted"></i></th>
+                                    <th onclick="sortTable('date')" class="cursor-pointer">Дата <i class="bi bi-arrow-down-up small text-muted"></i></th>
+                                    <th onclick="sortTable('crop')" class="cursor-pointer">Культура <i class="bi bi-arrow-down-up small text-muted"></i></th>
+                                    <th onclick="sortTable('weight')" class="cursor-pointer">Вес (т) <i class="bi bi-arrow-down-up small text-muted"></i></th>
+                                    <th onclick="sortTable('payment')" class="cursor-pointer">Оплата <i class="bi bi-arrow-down-up small text-muted"></i></th>
+                                    <th>Прогресс</th>
+                                </tr>
+                            </thead>
+                            <tbody id="requestsTableBody" class="border-top-0"></tbody>
+                            <tfoot id="requestsTableFoot"></tfoot>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end mt-2">
+                        <ul class="pagination pagination-sm shadow-sm" id="requestsPagination"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card dashboard-card border-0 bg-body position-sticky" style="top: 100px;">
+                <div class="card-header bg-primary text-white p-4 border-0 rounded-top-4" style="background: linear-gradient(135deg, var(--bs-primary) 0%, rgba(13,110,253, 0.8) 100%);">
+                    <h5 class="mb-0 fw-bold">Подать заявку</h5>
+                    <small class="opacity-75">Оформление нового завоза/вывоза</small>
+                </div>
+                <div class="card-body p-4">
+                    <form id="requestForm">
+                        <span class="d-none" id="formMessage"></span>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Тип операции</label>
+                            <select class="form-select form-select-lg bg-body-tertiary border-0 rounded-3 shadow-sm fw-medium" id="operationTypeSelect" required>
+                                <option value="Приемка на элеватор" selected>Приемка на элеватор (Завоз)</option>
+                                <option value="Отгрузка с элеватора">Отгрузка с элеватора (Вывоз)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Планируемая дата</label>
+                            <input type="date" class="form-control form-control-lg bg-body-tertiary border-0 rounded-3 shadow-sm" id="dateInput" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Культура</label>
+                            <select class="form-select form-select-lg bg-body-tertiary border-0 rounded-3 shadow-sm fw-medium" id="cropSelect" required>
+                                <option value="" selected disabled>Загрузка культур...</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Ориентировочный вес (тонн)</label>
+                            <div class="input-group input-group-lg shadow-sm rounded-3">
+                                <input type="number" class="form-control border-0 bg-body-tertiary calc-trigger" id="weightInput" min="5" step="0.1" required>
+                                <span class="input-group-text bg-body-tertiary border-0 text-muted">т.</span>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mb-3" id="qualityBlock">
+                            <div class="col-6">
+                                <label class="form-label text-muted small fw-bold">Влажность, %</label>
+                                <input type="number" class="form-control bg-body-tertiary border-0 rounded-3 shadow-sm calc-trigger" id="moistureInput" placeholder="База 14%" min="0" step="0.1">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label text-muted small fw-bold">Сорность, %</label>
+                                <input type="number" class="form-control bg-body-tertiary border-0 rounded-3 shadow-sm calc-trigger" id="weedinessInput" placeholder="База 2%" min="0" step="0.1">
+                            </div>
+                        </div>
+
+                        <div class="bg-body-tertiary p-3 rounded-3 mb-3 border-start border-4 border-warning shadow-sm" id="servicesBlock">
+                            <h6 class="fw-bold mb-2 text-dark small text-uppercase">Дополнительные услуги</h6>
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input calc-trigger" type="checkbox" id="checkStorage">
+                                <label class="form-check-label small fw-medium" for="checkStorage">Длительное хранение</label>
+                            </div>
+                            <div class="mb-3 d-none ps-4" id="storageDaysBlock">
+                                <label class="form-label text-muted small fw-bold mb-1">Планируемый срок (дней)</label>
+                                <input type="number" class="form-control form-control-sm bg-body border-0 shadow-sm calc-trigger" id="storageDaysInput" min="1" placeholder="Например: 30">
+                            </div>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input calc-trigger" type="checkbox" id="checkTrain">
+                                <label class="form-check-label small fw-medium" for="checkTrain">Отгрузка на Ж/Д транспорт</label>
+                            </div>
+                            <div class="border-top border-secondary border-opacity-25 pt-2 mt-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="small text-muted fw-bold">Примерная стоимость:</span>
+                                    <span class="fs-5 fw-bold text-primary" id="calcTotal">0.00 ₽</span>
+                                </div>
+                                <small class="text-muted d-block mt-1" style="font-size: 0.65rem; line-height: 1;">
+                                    *Расчет предварительный. Точная стоимость формируется диспетчером по факту анализа.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-muted small fw-bold">Комментарий</label>
+                            <textarea class="form-control bg-body-tertiary border-0 rounded-3 shadow-sm" id="commentInput" rows="2" placeholder="Особые пожелания..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-agro btn-lg w-100 fw-bold rounded-pill shadow">Отправить заявку</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="requestDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4">
+                <h5 class="modal-title fw-bold">Детали заявки №<span id="modalReqId"></span></h5>
+                <button type="button" class="btn-close bg-body-tertiary rounded-circle p-2" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4 pt-3 pb-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div id="modalStatusBadge" class="me-3"></div>
+                </div>
+                
+                <div class="row mb-4 bg-body-tertiary p-3 rounded-4 g-3">
+                    <div class="col-6 text-center border-end border-secondary border-opacity-10">
+                        <small class="text-muted text-uppercase fw-bold d-block mb-1">Культура</small>
+                        <strong id="modalCrop" class="fs-5 text-primary"></strong>
+                    </div>
+                    <div class="col-6 text-center">
+                        <small class="text-muted text-uppercase fw-bold d-block mb-1">Дата</small>
+                        <strong id="modalDate" class="fs-5"></strong>
+                    </div>
+                </div>
+                
+                <div class="row mb-4 bg-body-tertiary p-3 rounded-4 g-3">
+                    <div class="col-4 text-center border-end border-secondary border-opacity-10">
+                        <small class="text-muted text-uppercase fw-bold d-block mb-1">Вес (т)</small>
+                        <strong id="modalWeight"></strong>
+                    </div>
+                    <div class="col-4 text-center border-end border-secondary border-opacity-10">
+                        <small class="text-muted text-uppercase fw-bold d-block mb-1">Влаж.</small>
+                        <strong id="modalMoisture"></strong>%
+                    </div>
+                    <div class="col-4 text-center">
+                        <small class="text-muted text-uppercase fw-bold d-block mb-1">Сорн.</small>
+                        <strong id="modalWeediness"></strong>%
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="row mb-3 bg-body-tertiary p-3 rounded-4 g-3 border-start border-4 border-warning" id="financeBlock">
+                        <div class="col-6 text-center border-end border-secondary border-opacity-10">
+                            <small class="text-muted text-uppercase fw-bold d-block mb-1">Статус оплаты</small>
+                            <strong id="modalPaymentStatus" class="fs-6"></strong>
+                        </div>
+                        <div class="col-6 text-center">
+                            <small class="text-muted text-uppercase fw-bold d-block mb-1">Итоговая сумма</small>
+                            <strong id="modalTotalAmount" class="fs-5 text-dark">0.00</strong> ₽
+                        </div>
+                    </div>
+                    
+                    <div id="modalServicesWrapper" class="d-none mb-4 px-2">
+                        <h6 class="text-muted fw-bold text-uppercase small mb-2"><i class="bi bi-receipt"></i> Расшифровка услуг:</h6>
+                        <ul class="list-group list-group-flush small border rounded-3" id="modalServicesList"></ul>
+                    </div>
+
+                    <h6 class="text-muted fw-bold text-uppercase small mb-2">Производственный этап</h6>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small fw-bold text-dark" id="modalStageName"></span>
+                        <span class="small text-muted fw-bold" id="modalStagePercent"></span>
+                    </div>
+                    <div class="progress mb-4" style="height: 8px; border-radius: 4px;">
+                        <div id="modalProgressBar" class="progress-bar bg-agro" role="progressbar"></div>
+                    </div>
+
+                    <h6 class="text-muted fw-bold text-uppercase small mb-2">Ваш комментарий:</h6>
+                    <div class="bg-body-tertiary p-3 rounded-3 shadow-sm border-start border-4 border-primary">
+                        <p class="mb-0 small" id="modalComment"></p>
+                    </div>
+                </div>
+
+                <div id="adminCommentBlock" class="d-none">
+                    <h6 class="text-danger fw-bold text-uppercase small mt-4 mb-2">Ответ администрации:</h6>
+                    <div class="bg-danger bg-opacity-10 text-danger p-3 rounded-3 shadow-sm border-start border-4 border-danger">
+                        <p class="mb-0 small fw-bold" id="modalAdminComment"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 pb-4 px-4">
+                <button type="button" class="btn btn-outline-danger fw-bold rounded-pill px-4 d-none" id="btnCancelRequest" onclick="cancelCurrentRequest()">Отменить заявку</button>
+                <button type="button" class="btn btn-outline-primary fw-bold rounded-pill px-4 d-none" id="btnDownloadAct" onclick="downloadAct()"><i class="bi bi-file-earmark-arrow-down"></i> Скачать Акт</button>
+                <button type="button" class="btn btn-success fw-bold rounded-pill px-4 d-none" id="btnPayRequest" onclick="payRequest()" disabled>Оплатить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="priceListModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 bg-warning bg-opacity-10 rounded-top-4">
+                <h5 class="modal-title fw-bold text-dark"><i class="bi bi-tags-fill text-warning me-2"></i> Прайс-лист на услуги БХБ</h5>
+                <button type="button" class="btn-close bg-white rounded-circle p-2 shadow-sm" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4 py-4">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="fw-bold text-muted text-uppercase small">Наименование услуги</th>
+                                <th class="text-end fw-bold text-muted text-uppercase small">Ед. изм.</th>
+                                <th class="text-end fw-bold text-muted text-uppercase small">Цена, ₽</th>
+                            </tr>
+                        </thead>
+                        <tbody id="priceListTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
+  <div id="liveToast" class="toast align-items-center text-bg-success border-0" role="alert">
+    <div class="d-flex">
+      <div class="toast-body fw-bold" id="toastMessage"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/client.js"></script>
+</body>
+</html>

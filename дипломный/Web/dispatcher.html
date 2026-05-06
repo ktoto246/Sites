@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>
+    (function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-bs-theme', savedTheme);
+    })();
+</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌾</text></svg>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель диспетчера | БХБ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script>
+        if (!localStorage.getItem('userId') || localStorage.getItem('userRole') !== 'dispatcher') {
+            window.location.replace('login.html');
+        }
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-agro mb-4 shadow-sm">
+    <div class="container">
+        <a class="navbar-brand mb-0 h1 fw-bold" href="dispatcher.html">БХБ | Диспетчерская</a>
+        <div class="d-flex align-items-center ms-auto">
+            <span id="userNameDisplay" class="text-white me-3 fw-bold">Загрузка...</span>
+            <button class="btn btn-outline-light btn-sm me-2 rounded-circle" id="themeToggle" title="Сменить тему">
+                <i class="bi bi-moon-stars-fill"></i>
+            </button>
+            <div class="vr mx-2 bg-white opacity-25 d-none d-lg-block"></div>
+            <button id="logoutBtn" class="btn btn-outline-light btn-sm fw-bold ms-lg-2">
+                <i class="bi bi-box-arrow-right"></i> Выйти
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="container pb-5">
+    <!-- КАРТОЧКИ СТАТИСТИКИ -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card dashboard-card border-0 bg-body">
+                <div class="card-body p-4 d-flex align-items-center border-start border-4 border-primary rounded-start-2">
+                    <div class="stat-icon-wrapper stat-icon-primary me-3 shadow-sm"><i class="bi bi-bell-fill"></i></div>
+                    <div>
+                        <h6 class="text-muted fw-bold mb-1 text-uppercase small">Новые заявки</h6>
+                        <h2 class="mb-0 fw-bold" id="adminStatNew">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card border-0 bg-body">
+                <div class="card-body p-4 d-flex align-items-center border-start border-4 border-warning rounded-start-2">
+                    <div class="stat-icon-wrapper stat-icon-warning me-3 shadow-sm"><i class="bi bi-gear-fill"></i></div>
+                    <div>
+                        <h6 class="text-muted fw-bold mb-1 text-uppercase small">В обработке на территории</h6>
+                        <h2 class="mb-0 fw-bold" id="adminStatActive">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card border-0 bg-body">
+                <div class="card-body p-4 d-flex align-items-center border-start border-4 border-success rounded-start-2">
+                    <div class="stat-icon-wrapper stat-icon-success me-3 shadow-sm"><i class="bi bi-check-circle-fill"></i></div>
+                    <div>
+                        <h6 class="text-muted fw-bold mb-1 text-uppercase small">Завершено завозов</h6>
+                        <h2 class="mb-0 fw-bold" id="adminStatDone">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- НОВЫЕ ГРАФИКИ ДЛЯ ДИСПЕТЧЕРА -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card dashboard-card border-0 bg-body h-100">
+                <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0 d-flex align-items-center">
+                    <h5 class="mb-0 fw-bold text-body">Тоннаж по культурам</h5>
+                </div>
+                <div class="card-body p-4 d-flex justify-content-center align-items-center" style="height: 250px;">
+                    <canvas id="cropWeightChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card border-0 bg-body h-100">
+                <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0 d-flex align-items-center">
+                    <h5 class="mb-0 fw-bold text-body">Загрузка территории (Этапы)</h5>
+                </div>
+                <div class="card-body p-4 d-flex justify-content-center align-items-center" style="height: 250px;">
+                    <canvas id="stageChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card border-0 bg-body h-100">
+                <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0 d-flex align-items-center">
+                    <h5 class="mb-0 fw-bold text-body">Глобальные статусы</h5>
+                </div>
+                <div class="card-body p-4 d-flex justify-content-center align-items-center" style="height: 250px;">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ОСНОВНАЯ ТАБЛИЦА -->
+    <div class="card dashboard-card border-0 bg-body mb-5">
+        <div class="card-header bg-transparent border-bottom-0 pt-4 pb-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <h5 class="mb-0 fw-bold">Оперативное управление фурами</h5>
+            <div class="btn-group btn-group-sm shadow-sm" role="group">
+                <button type="button" class="btn btn-outline-secondary active fw-bold" onclick="setAdminFilter('all', this)">Все</button>
+                <button type="button" class="btn btn-outline-secondary fw-bold" onclick="setAdminFilter('new', this)">Новые</button>
+                <button type="button" class="btn btn-outline-secondary fw-bold" onclick="setAdminFilter('active', this)">В работе</button>
+            </div>
+        </div>
+        
+        <div class="card-body bg-body-tertiary border-top border-bottom py-3">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-5">
+                    <div class="input-group input-group-sm shadow-sm rounded-pill bg-body overflow-hidden">
+                        <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" id="searchName" class="form-control border-0 bg-transparent shadow-none" placeholder="Поиск контрагента...">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-premium w-100 text-nowrap mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">№</th>
+                            <th>Контрагент</th>
+                            <th>Дата / Коммент</th>
+                            <th>Культура / Услуги</th>
+                            <th>Вес / Вл. / Сорн.</th>
+                            <th style="min-width: 160px;">Статус (Глобально)</th>
+                            <th style="min-width: 200px;">Этап на территории</th>
+                            <th class="pe-4">Действие</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody" class="border-top-0"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-transparent border-top-0 pt-3 pb-4 px-4 d-flex justify-content-end align-items-center">
+            <ul class="pagination pagination-sm mb-0 shadow-sm" id="adminPagination"></ul>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка: Отклонение -->
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4">
+                <h5 class="modal-title fw-bold">Отклонение заявки</h5>
+                <button type="button" class="btn-close bg-body-tertiary rounded-circle p-2" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4 py-4">
+                <p class="text-muted fw-bold mb-3">Укажите причину отказа. Это увидит контрагент:</p>
+                <textarea id="rejectComment" class="form-control border-0 bg-body-tertiary rounded-3 shadow-sm p-3" rows="3" placeholder="Например: Не прошел анализ лаборатории..."></textarea>
+            </div>
+            <div class="modal-footer border-top-0 pb-4 px-4">
+                <button type="button" class="btn btn-light fw-bold rounded-pill" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-danger fw-bold rounded-pill shadow-sm px-4" id="confirmRejectBtn">Отклонить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка: Весовая -->
+<div class="modal fade" id="weighingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 bg-warning bg-opacity-10 rounded-top-4">
+                <h5 class="modal-title fw-bold text-dark"><i class="bi bi-truck me-2"></i>Взвешивание (Брутто)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4 py-4">
+                <p class="small text-muted fw-bold mb-3">Зафиксируйте реальный вес фуры при заезде:</p>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Фактический вес на весах (т)</label>
+                    <input type="number" id="intakeWeight" class="form-control bg-body-tertiary" step="0.01" placeholder="Например: 98.50">
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 pb-4 px-4">
+                <button type="button" class="btn btn-light rounded-pill fw-bold" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-warning rounded-pill fw-bold text-dark shadow-sm px-4" id="saveWeighingBtn">Сохранить вес</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка: Лаборатория -->
+<div class="modal fade" id="labModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 bg-info bg-opacity-10 rounded-top-4">
+                <h5 class="modal-title fw-bold text-dark"><i class="bi bi-droplet me-2"></i>Данные лаборатории</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4 py-4">
+                <p class="small text-muted fw-bold mb-3">Зафиксируйте фактические показатели после анализа пробы:</p>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Фактический вес нетто (т)</label>
+                    <input type="number" id="labWeight" class="form-control bg-body-tertiary" step="0.01">
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label class="form-label small fw-bold">Факт. влажность (%)</label>
+                        <input type="number" id="labMoisture" class="form-control bg-body-tertiary" step="0.1">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small fw-bold">Факт. сорность (%)</label>
+                        <input type="number" id="labWeediness" class="form-control bg-body-tertiary" step="0.1">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 pb-4 px-4">
+                <button type="button" class="btn btn-light rounded-pill fw-bold" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-info rounded-pill fw-bold text-white shadow-sm px-4" id="saveLabBtn">Сохранить факты</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1055;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- ДОБАВЛЕН СКРИПТ ГРАФИКОВ -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/dispatcher.js"></script>
+</body>
+</html>

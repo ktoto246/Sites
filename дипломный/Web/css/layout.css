@@ -1,0 +1,96 @@
+/* layout.css - Premium Dashboard Layout */
+body {
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Elevate main cards */
+.dashboard-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 16px !important;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+}
+
+/* Stat card icons beautiful glow */
+.stat-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+}
+
+.stat-icon-primary { background: rgba(13, 110, 253, 0.1); color: var(--bs-primary); }
+.stat-icon-success { background: rgba(25, 135, 84, 0.1); color: var(--bs-success); }
+.stat-icon-warning { background: rgba(255, 193, 7, 0.15); color: #d39e00; }
+[data-bs-theme="dark"] .stat-icon-warning { color: var(--bs-warning); }
+.stat-icon-secondary { background: rgba(108, 117, 125, 0.1); color: var(--bs-secondary); }
+
+/* Table enhancements */
+.table-premium {
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+.table-premium thead th {
+    border-bottom: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--bs-secondary);
+    padding-bottom: 12px;
+}
+.table-premium tbody tr {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    border-radius: 12px;
+    background-color: var(--bs-body-bg);
+    transition: all 0.2s ease;
+}
+.table-premium tbody td {
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    vertical-align: middle;
+    padding: 16px;
+}
+.table-premium tbody td:first-child {
+    border-left: 1px solid transparent;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+.table-premium tbody td:last-child {
+    border-right: 1px solid transparent;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+.table-premium tbody tr:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transform: scale(1.002);
+}
+[data-bs-theme="dark"] .table-premium tbody tr {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Make body background neutral so cards pop */
+body, .bg-body-tertiary {
+    background-color: #f8f9fa !important;
+}
+[data-bs-theme="dark"] body, [data-bs-theme="dark"] .bg-body-tertiary {
+    background-color: #0f1219 !important;
+}
+
+/* Filter controls modern */
+.btn-group-filters .btn {
+    border-radius: 20px;
+    margin: 0 4px;
+    border: none;
+    font-weight: 500;
+}
+.btn-group-filters .btn.active {
+    border-radius: 20px !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}

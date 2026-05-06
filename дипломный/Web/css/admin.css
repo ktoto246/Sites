@@ -1,0 +1,64 @@
+.bg-admin {
+    background-color: #212529 !important;
+}
+
+.admin-stat-card {
+    border-radius: 1rem !important;
+    border: 1px solid var(--bs-border-color-translucent);
+    background-color: var(--bs-body-bg);
+    border-top: 5px solid transparent;
+    transition: transform 0.2s;
+}
+.admin-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+[data-bs-theme="dark"] .admin-stat-card:hover {
+    box-shadow: 0 5px 15px rgba(255,255,255,0.05);
+}
+
+.border-new { border-top-color: #0d6efd !important; }
+.border-active { border-top-color: #ffc107 !important; }
+.border-done { border-top-color: #198754 !important; }
+
+.row-new-request {
+    border-left: 4px solid #0d6efd;
+}
+[data-bs-theme="light"] .row-new-request {
+    background-color: #f0f7ff !important;
+}
+[data-bs-theme="dark"] .row-new-request {
+    background-color: rgba(13, 110, 253, 0.1) !important;
+}
+
+.admin-select {
+    font-size: 0.85rem;
+    padding: 0.3rem 1.5rem 0.3rem 0.5rem;
+    font-weight: 500;
+}
+
+.btn-save-row {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+}
+
+/* Фикс обрезанного поиска */
+.input-group.rounded-pill {
+    border: 1px solid var(--bs-border-color-translucent);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-group.rounded-pill:focus-within {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+.input-group.rounded-pill .form-control {
+    border: none !important; /* Убираем конфликт с глобальным стилем из style.css */
+    padding-left: 0.5rem;
+    box-shadow: none !important;
+}
+
+.input-group.rounded-pill .input-group-text {
+    padding-right: 0.25rem;
+}

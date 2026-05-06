@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌾</text></svg>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой Профиль | БХБ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        if (!localStorage.getItem('userId')) {
+            window.location.replace('login.html');
+        }
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-agro mb-4 shadow-sm">
+    <div class="container">
+        <a class="navbar-brand mb-0 h1 fw-bold" href="index.html">БХБ</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link fw-bold" href="#" id="homeLink" onclick="goHome()">На главную</a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center mt-3 mt-lg-0">
+                <span id="profileNameDisplay" class="text-white me-3 fw-bold"></span>
+                <button class="btn btn-outline-light btn-sm me-2 rounded-circle" id="themeToggle" title="Сменить тему">
+                    <i class="bi bi-moon-stars-fill"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card dashboard-card border-0 bg-body shadow-sm">
+                <div class="card-header bg-primary text-white p-4 border-0 rounded-top-4" style="background: linear-gradient(135deg, var(--bs-primary) 0%, rgba(13,110,253, 0.8) 100%);">
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-person-circle me-2"></i> Мой профиль</h4>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <div id="loadingProfile" class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="text-muted mt-2">Загрузка данных...</p>
+                    </div>
+
+                    <form id="profileForm" class="d-none">
+                        <div class="mb-4">
+                            <label class="form-label text-muted small fw-bold">ФИО / Название организации</label>
+                            <input type="text" class="form-control form-control-lg bg-body-tertiary border-0 rounded-3 shadow-sm" id="profileName" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-muted small fw-bold">E-mail адрес</label>
+                            <input type="email" class="form-control form-control-lg bg-body-tertiary border-0 rounded-3 shadow-sm" id="profileEmail" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-muted small fw-bold">Контактный телефон</label>
+                            <div class="input-group input-group-lg shadow-sm rounded-3">
+                                <input type="text" class="form-control border-0 bg-body-tertiary" id="profilePhone" required>
+                                <button class="btn btn-outline-secondary border-0 bg-body-tertiary" type="button" id="savePhoneBtn" onclick="updatePhone()"><i class="bi bi-check-lg text-success fs-5"></i></button>
+                            </div>
+                            <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">Изменение телефона сохраняется отдельно по кнопке справа</small>
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label text-muted small fw-bold">Дата регистрации</label>
+                            <input type="text" class="form-control form-control-lg bg-body-tertiary border-0 rounded-3 shadow-sm text-muted" id="profileDate" disabled>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold rounded-pill shadow">Сохранить основные данные</button>
+                            <button type="button" class="btn btn-light btn-lg fw-bold rounded-pill text-muted" onclick="goHome()">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1055;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/profile.js"></script>
+<script>
+    function goHome() {
+        const role = localStorage.getItem('userRole');
+        if (role === 'admin' || role === 'manager') window.location.href = 'admin.html';
+        else if (role === 'dispatcher') window.location.href = 'dispatcher.html';
+        else window.location.href = 'index.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleBtn = document.getElementById('themeToggle');
+        if (!toggleBtn) return;
+        const updateIcon = (theme) => toggleBtn.innerHTML = theme === 'dark' ? '<i class="bi bi-sun-fill"></i>' : '<i class="bi bi-moon-stars-fill"></i>';
+        updateIcon(localStorage.getItem('theme') || 'light');
+        toggleBtn.addEventListener('click', () => {
+            const newTheme = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateIcon(newTheme);
+        });
+    });
+</script>
+</body>
+</html>

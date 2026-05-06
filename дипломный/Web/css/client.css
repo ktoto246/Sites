@@ -1,0 +1,39 @@
+.stat-card {
+    border-radius: 1rem !important;
+    border: 1px solid var(--bs-border-color-translucent);
+    background-color: var(--bs-body-bg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+[data-bs-theme="dark"] .stat-card:hover {
+    box-shadow: 0 10px 20px rgba(255,255,255,0.05) !important;
+}
+
+th.sortable {
+    cursor: pointer;
+    position: relative;
+    user-select: none; 
+    transition: background-color 0.2s;
+}
+th.sortable:hover {
+    background-color: var(--bs-tertiary-bg);
+}
+th.sortable i {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-left: 5px;
+}
+
+.empty-state {
+    padding: 3rem;
+    text-align: center;
+    color: #6c757d;
+}
+.empty-state i {
+    font-size: 4rem;
+    color: #dee2e6;
+    margin-bottom: 1rem;
+}
