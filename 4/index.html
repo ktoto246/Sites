@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход — ООО «Стройка»</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/database.js" defer></script>
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <section class="intro" aria-label="О компании">
+      <a class="brand" href="index.html">ООО «Стройка»</a>
+      <div class="intro-content">
+        <div class="intro-line"></div>
+        <h1>Всё для<br>строительства<br>в одном месте<span>.</span></h1>
+        <p>Личный кабинет клиентов и сотрудников ООО «Стройка».</p>
+      </div>
+      <div class="blueprint" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p class="intro-footer">ООО «Стройка» <span> / </span> Продажа строительных материалов</p>
+    </section>
+
+    <section class="login-area" aria-labelledby="login-title">
+      <div class="login-box">
+        <div class="mobile-brand">ООО «Стройка»</div>
+        <p class="section-label">Личный кабинет</p>
+        <h2 id="login-title">Добро пожаловать</h2>
+        <p class="subtitle">Войдите в свой аккаунт, чтобы продолжить.</p>
+        <form id="login-form">
+          <label for="login">Логин</label>
+          <input id="login" name="login" type="text" placeholder="Введите логин" autocomplete="username" required>
+          <label for="password">Пароль</label>
+          <input id="password" name="password" type="password" placeholder="Введите пароль" autocomplete="current-password" required>
+          <p id="message" class="message" role="status" aria-live="polite"></p>
+          <button class="submit" type="submit">Войти <span aria-hidden="true">↗</span></button>
+        </form>
+        <p class="auth-switch">Нет аккаунта? <button type="button" id="show-register">Зарегистрироваться</button></p>
+        <form id="register-form" hidden>
+          <label for="register-login">Логин</label>
+          <input id="register-login" name="login" type="text" placeholder="Придумайте логин" autocomplete="username" required>
+          <label for="register-password">Пароль</label>
+          <input id="register-password" name="password" type="password" placeholder="Придумайте пароль" autocomplete="new-password" minlength="4" required>
+          <label for="confirm-password">Повторите пароль</label>
+          <input id="confirm-password" name="confirmPassword" type="password" placeholder="Повторите пароль" autocomplete="new-password" required>
+          <p id="register-message" class="message" role="status" aria-live="polite"></p>
+          <button class="submit" type="submit">Зарегистрироваться</button>
+          <p class="auth-switch">Уже есть аккаунт? <button type="button" id="show-login">Войти</button></p>
+        </form>
+        <a class="catalog-link" href="catalog.html">Перейти в каталог без входа</a>
+        <div class="quick-login" aria-label="Вход по роли">
+          <button type="button" data-role="client">Клиент</button>
+          <button type="button" data-role="admin">Администратор</button>
+          <button type="button" data-role="dispatcher">Диспетчер</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

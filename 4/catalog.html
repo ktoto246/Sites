@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталог — ООО «Стройка»</title>
+  <link rel="stylesheet" href="css/catalog.css">
+  <script src="js/database.js" defer></script>
+  <script src="js/catalog.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <a class="logo" href="catalog.html">ООО «Стройка»<span>.</span></a>
+    <nav class="navigation" aria-label="Основная навигация">
+      <button type="button" data-view="catalog" class="nav-button active">Каталог</button>
+      <button type="button" data-view="orders" class="nav-button">Мои заказы</button>
+      <button type="button" data-view="cart" class="nav-button cart-button">Корзина <span id="cart-count">0</span></button>
+    </nav>
+    <div id="account" class="account"></div>
+  </header>
+  <main class="main">
+    <section id="catalog-view" class="view">
+      <div class="hero"><div><p>Материалы для ваших проектов</p><h1>Всё начинается<br>со стройки<span>.</span></h1><p class="hero-text">Строительные материалы для ремонта и строительства — выбирайте то, что нужно именно вам.</p></div><div class="hero-art" aria-hidden="true"><i></i><i></i><i></i></div></div>
+      <div class="section-heading"><div><p class="eyebrow">Выбирайте нужное</p><h2>Каталог товаров</h2></div><span id="product-count" class="muted"></span></div>
+      <div class="filters"><label class="search"><span>Поиск</span><input id="search" type="search" placeholder="Название товара"></label><label class="category"><span>Категория</span><select id="category"><option value="">Все категории</option></select></label></div>
+      <div id="products" class="products"></div>
+    </section>
+    <section id="cart-view" class="view" hidden>
+      <div class="section-heading"><div><p class="eyebrow">Ваш выбор</p><h1 class="page-title">Корзина</h1></div><button type="button" class="text-button" data-view="catalog">Продолжить покупки</button></div>
+      <div class="cart-layout"><div id="cart-items" class="cart-items"></div><aside class="summary"><h2>Ваш заказ</h2><div class="summary-row"><span>Товары</span><strong id="cart-total">0 ₽</strong></div><p class="muted">Стоимость доставки уточняется при обработке заказа.</p><button id="checkout-button" type="button" class="primary">Оформить заказ</button><p id="cart-notice" class="notice" role="status"></p></aside></div>
+    </section>
+    <section id="checkout-view" class="view narrow" hidden>
+      <button type="button" class="text-button back" data-view="cart">← Вернуться в корзину</button><h1 class="page-title">Оформление заказа</h1><p class="muted">Укажите, как вам удобнее получить и оплатить заказ.</p>
+      <form id="checkout-form" class="checkout-form">
+        <fieldset><legend>Получение заказа</legend><label class="choice"><input type="radio" name="delivery" value="pickup" checked> Самовывоз</label><label class="choice"><input type="radio" name="delivery" value="delivery"> Доставка</label></fieldset>
+        <label class="field">Телефон<input name="phone" type="tel" placeholder="+7 (999) 123-45-67" required></label>
+        <label class="field" id="address-field" hidden>Адрес доставки<input name="address" type="text" placeholder="Город, улица, дом, квартира"></label>
+        <fieldset><legend>Способ оплаты</legend><label class="choice"><input type="radio" name="payment" value="card" checked> Картой</label><label class="choice"><input type="radio" name="payment" value="cash"> Наличными при получении</label></fieldset>
+        <div id="card-fields">
+          <p class="payment-note">Имитация оплаты: вводите только вымышленные данные, не используйте настоящую карту. Данные не сохраняются.</p>
+          <label class="field">Номер карты<input name="cardNumber" inputmode="numeric" autocomplete="off" placeholder="0000 0000 0000 0000" required></label>
+          <label class="field">Срок действия<input name="cardExpiry" autocomplete="off" placeholder="ММ/ГГ" required></label>
+          <label class="field">Код карты<input name="cardCode" inputmode="numeric" autocomplete="off" placeholder="000" required></label>
+        </div><div class="summary-row total-row"><span>Итого за товары</span><strong id="checkout-total"></strong></div><button type="submit" class="primary">Подтвердить заказ</button><p id="checkout-message" class="notice" role="status"></p>
+      </form>
+    </section>
+    <section id="orders-view" class="view" hidden><div class="section-heading"><div><p class="eyebrow">Личный кабинет</p><h1 class="page-title">Мои заказы</h1></div></div><div id="orders-list"></div></section>
+  </main>
+  <footer class="footer">ООО «Стройка» <span>Строительные материалы для ваших проектов</span></footer>
+</body>
+</html>

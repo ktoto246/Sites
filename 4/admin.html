@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Панель администратора — ООО «Стройка»</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <script src="js/database.js" defer></script>
+  <script src="js/admin.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="admin.html">ООО «Стройка»</a>
+    <span class="header-title">Панель администратора</span>
+    <div class="account"><span id="account-name"></span><a href="catalog.html">Каталог</a><button id="logout" type="button">Выйти</button></div>
+  </header>
+  <main class="main">
+    <section class="banner"><p>Управление магазином</p><h1>Панель администратора</h1><p>Заказы, показатели и сотрудники в одном месте.</p></section>
+    <div class="content">
+      <section aria-labelledby="overview-title"><div class="section-head"><div><p class="caption">Общая картина</p><h2 id="overview-title">Показатели магазина</h2></div></div><div id="metrics" class="metrics"></div><p class="explanation">Сумма завершённых заказов включает известную стоимость доставки; если она не указана, учтены только товары. Это не подтверждённая выручка: оплата на сайте не проводится.</p></section>
+      <section aria-labelledby="charts-title"><div class="section-head"><div><p class="caption">На основе заказов</p><h2 id="charts-title">Статистика</h2></div></div><div class="charts"><article class="panel"><h3>Заказы за последние 7 дней</h3><div id="daily-chart" class="chart"></div><div id="daily-table"></div></article><article class="panel"><h3>Заказы по статусам</h3><div id="status-chart" class="chart"></div><div id="status-table"></div></article></div></section>
+      <section aria-labelledby="employees-title"><div class="section-head"><div><p class="caption">Команда</p><h2 id="employees-title">Сотрудники</h2></div></div><div class="employee-layout"><div class="panel"><div class="filters"><label>Поиск<input id="employee-search" type="search" placeholder="Имя сотрудника"></label><label>Должность<select id="employee-role"><option value="">Все должности</option><option value="picker">Сборщики</option><option value="driver">Водители</option></select></label></div><div id="employees"></div></div><form id="hire-form" class="panel hire-form"><h3>Нанять сотрудника</h3><label>Имя и фамилия<input name="name" required maxlength="80" placeholder="Имя сотрудника"></label><label>Должность<select name="role"><option value="picker">Сборщик</option><option value="driver">Водитель</option></select></label><button class="primary" type="submit">Добавить сотрудника</button><p id="hire-message" class="message" role="status"></p></form></div></section>
+      <section aria-labelledby="products-title"><div class="section-head"><div><p class="caption">Каталог</p><h2 id="products-title">Управление товарами</h2></div></div><div class="employee-layout"><div class="panel"><label class="product-search">Поиск товара<input id="product-search" type="search" placeholder="Название или категория"></label><div id="admin-products"></div></div><form id="product-form" class="panel hire-form"><h3 id="product-form-title">Добавить товар</h3><input type="hidden" name="productId"><label>Название<input name="productName" required maxlength="100"></label><label>Категория<input name="productCategory" required maxlength="80"></label><label>Цена, ₽<input name="productPrice" type="number" min="0" step="0.01" required></label><label>Единица измерения<input name="productUnit" required maxlength="50" placeholder="шт., мешок, лист"></label><label>Путь к фотографии или ссылка<input name="productImage" placeholder="images/products/cement.jpg"></label><button class="primary" type="submit">Сохранить товар</button><button id="reset-product" class="secondary" type="button">Очистить форму</button><p id="product-message" class="message" role="status"></p></form></div></section>
+      <section aria-labelledby="recent-title"><div class="section-head"><div><p class="caption">Последние операции</p><h2 id="recent-title">Последние заказы</h2></div></div><div class="panel" id="recent-orders"></div></section>
+    </div>
+  </main>
+</body>
+</html>

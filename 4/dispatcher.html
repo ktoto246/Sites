@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Заказы — ООО «Стройка»</title>
+  <link rel="stylesheet" href="css/dispatcher.css">
+  <script src="js/database.js" defer></script>
+  <script src="js/dispatcher.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="dispatcher.html">ООО «Стройка»</a>
+    <span class="header-title">Кабинет диспетчера</span>
+    <div class="account"><span id="account-name"></span><button id="logout" type="button">Выйти</button></div>
+  </header>
+  <main class="main">
+    <section class="banner"><div><p>Работа с заказами</p><h1>Заказы клиентов</h1><p>Отслеживайте сборку, доставку и выдачу заказов.</p></div></section>
+    <section class="content" aria-labelledby="orders-title">
+      <div class="heading"><div><p class="caption">Все заказы</p><h2 id="orders-title">Управление заказами</h2></div><span id="order-count" class="count"></span></div>
+      <div class="filters"><label>Поиск<input type="search" id="search" placeholder="Клиент, телефон или товар"></label><label>Статус<select id="status-filter"><option value="">Все статусы</option><option>Новый</option><option>Собирается</option><option>Передан в доставку</option><option>Доставлен</option><option>Готов к выдаче</option><option>Выдан</option><option>Отменён</option></select></label></div>
+      <div id="orders" class="orders" aria-live="polite"></div>
+    </section>
+  </main>
+</body>
+</html>
