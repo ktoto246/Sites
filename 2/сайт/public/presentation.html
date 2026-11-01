@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Гипермаркет «Семейный» — Презентация проекта</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0f172a;
+      --bg-dark: #020617;
+      --bg-gray: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-light: #ffffff;
+      --accent: #10b981; /* Emerald green for fresh supermarket theme */
+      --accent-blue: #3b82f6;
+      --accent-light: rgba(16, 185, 129, 0.15);
+      --border: #334155;
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+    }
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      background: var(--bg-main);
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 8vh 8vw;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(40px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      background: var(--bg-main);
+    }
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .dark, .cover, .demo-transition {
+      background: var(--bg-dark);
+      color: var(--text-light);
+    }
+    .cream { background: #0b1121; }
+    .eyebrow {
+      font-size: clamp(12px, 1.2vw, 16px);
+      font-weight: 600;
+      color: #34d399;
+      background: var(--accent-light);
+      padding: 6px 16px;
+      border-radius: 99px;
+      display: inline-block;
+      margin-bottom: 2.5vh;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .slide-title {
+      font-size: clamp(32px, 4vw, 60px);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      max-width: 950px;
+      margin: 0;
+      font-weight: 800;
+    }
+    .slide-subtitle {
+      font-size: clamp(18px, 1.6vw, 24px);
+      line-height: 1.5;
+      max-width: 780px;
+      color: var(--text-muted);
+      margin: 2vh 0 0;
+    }
+    .accent-line {
+      width: 80px;
+      height: 4px;
+      background: var(--accent);
+      margin: 3vh 0 4vh;
+      border-radius: 4px;
+    }
+    .slide-number {
+      position: absolute;
+      right: 4vw;
+      bottom: 4vh;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+    .step {
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .step.shown {
+      opacity: 1;
+      transform: none;
+    }
+    .institution.step {
+      position: absolute;
+      top: 3vh;
+      left: 8vw;
+      margin: 0;
+      color: #64748b;
+      font-size: clamp(12px, 1.1vw, 16px);
+      font-weight: 600;
+    }
+    .cover-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5vw;
+      align-items: center;
+      height: 100%;
+      padding-top: 5vh;
+    }
+    .cover h1 {
+      font-size: clamp(36px, 4.2vw, 64px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      margin: 0;
+      font-weight: 800;
+    }
+    .cover-meta {
+      margin-top: 5vh;
+      font-size: clamp(15px, 1.3vw, 19px);
+      line-height: 1.8;
+      color: #94a3b8;
+      border-left: 3px solid var(--accent);
+      padding-left: 1.5vw;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5vw;
+      align-items: start;
+    }
+    .label {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 1.5vh;
+    }
+    .big-text {
+      font-size: clamp(20px, 2.2vw, 32px);
+      line-height: 1.35;
+      font-weight: 600;
+      margin: 0;
+    }
+    .clean-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: clamp(16px, 1.5vw, 22px);
+      line-height: 1.6;
+    }
+    .clean-list li {
+      padding: 0 0 2vh 2em;
+      position: relative;
+    }
+    .clean-list li:before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .quote {
+      font-size: clamp(24px, 3vw, 44px);
+      line-height: 1.25;
+      max-width: 1000px;
+      font-weight: 700;
+      margin-top: 8vh;
+      color: #f8fafc;
+    }
+    .problem {
+      font-size: clamp(18px, 1.9vw, 26px);
+      line-height: 1.5;
+      max-width: 880px;
+      margin-top: auto;
+      color: #94a3b8;
+    }
+    .highlight { color: #34d399; font-weight: 700; }
+    
+    .roles {
+      display: grid;
+      gap: 2vh;
+    }
+    .role-card {
+      background: var(--bg-gray);
+      padding: 2.2vh 1.8vw;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+    .role-name {
+      font-size: clamp(18px, 1.6vw, 22px);
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.5vh;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .role-badge {
+      font-size: 11px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      font-weight: 800;
+    }
+    .role-text {
+      font-size: clamp(13px, 1.2vw, 17px);
+      color: var(--text-muted);
+    }
+    
+    .flow {
+      display: flex;
+      align-items: stretch;
+      gap: 1.5vw;
+      margin-top: 2vh;
+    }
+    .flow-item {
+      flex: 1;
+      padding: 3vh 1.8vw;
+      border-radius: var(--radius);
+      background: var(--bg-gray);
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    .flow-number {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1vh;
+      display: block;
+    }
+    .flow-item b {
+      display: block;
+      font-size: clamp(18px, 1.6vw, 22px);
+      margin-bottom: 1.2vh;
+      color: #ffffff;
+    }
+    .flow-item span {
+      font-size: clamp(13px, 1.2vw, 17px);
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+    
+    .tech-table {
+      margin-top: 2vh;
+      width: 100%;
+      border-collapse: collapse;
+      font-size: clamp(16px, 1.5vw, 22px);
+    }
+    .tech-table td {
+      padding: 2.2vh 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .tech-table td:first-child {
+      font-weight: 700;
+      width: 35%;
+      color: var(--accent);
+    }
+    
+    .demo-transition h1 {
+      font-size: clamp(40px, 5.5vw, 80px);
+      margin: 2vh 0 3vh;
+      font-weight: 800;
+    }
+    .demo-transition p {
+      font-size: clamp(20px, 2vw, 30px);
+      color: #94a3b8;
+      max-width: 800px;
+    }
+    
+    .image-frame {
+      position: relative;
+      border-radius: var(--radius);
+      background: var(--bg-gray);
+      overflow: hidden;
+      min-height: 52vh;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .image-frame img {
+      width: 100%;
+      height: 100%;
+      background: var(--bg-dark);
+      object-fit: cover;
+    }
+    .placeholder-box {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+    }
+    .placeholder-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 4px;
+      background: var(--accent);
+      width: 0%;
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    .nav-hint {
+      position: absolute;
+      left: 4vw;
+      bottom: 4vh;
+      font-size: 13px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .key-badge {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    
+    @media(max-width: 800px) {
+      .cover-layout, .two-col, .flow {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+      }
+      .image-frame { min-height: 35vh; }
+      .slide { padding: 8vh 6vw; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <main class="deck" id="deck">
+    
+    <!-- Слайд 1: Обложка -->
+    <section class="slide cover active">
+      <p class="institution step">ГАПОУ СО «Балашовский техникум механизации сельского хозяйства»</p>
+      <div class="cover-layout">
+        <div>
+          <div class="eyebrow step">Курсовой проект</div>
+          <h1 class="step">Веб-система учета и сортировки продукции гипермаркета «Семейный»</h1>
+          <div class="cover-meta step">
+            Выполнил: Шепелев К.Р. (ИП-41)<br>
+            Руководитель: Сухова Л.Г.<br><br>
+            Балашов, 2026
+          </div>
+        </div>
+        <div class="image-frame step">
+          <!-- Оставьте файл 1.png или скриншот главной панели в этой же папке -->
+          <img src="1.png" alt="Скриншот приложения Семейный" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'placeholder-box\'><span class=\'placeholder-icon\'>📦</span><b>Гипермаркет «Семейный»</b><br><small style=\'opacity:0.7;\'>Система учета и сортировки</small></div>';">
+        </div>
+      </div>
+      <div class="nav-hint">
+        <span>Навигация:</span>
+        <span class="key-badge">Пробел</span>
+        <span class="key-badge">→</span>
+      </div>
+      <span class="slide-number">01</span>
+    </section>
+
+    <!-- Слайд 2: Цель и задачи -->
+    <section class="slide">
+      <h2 class="slide-title step">Цель и задачи проекта</h2>
+      <div class="accent-line step"></div>
+      <div class="two-col">
+        <div class="step">
+          <div class="label">Главная цель</div>
+          <p class="big-text">Создать локальную веб-систему оперативного учета сортировки продукции Fresh, автоматизирующую приёмку ТТН, контроль массы, уценку 2-го сорта и печать актов ТОРГ-15/16.</p>
+        </div>
+        <div class="step">
+          <div class="label">Задачи</div>
+          <ul class="clean-list">
+            <li>Оцифровка сортировочной линии и категорий качества</li>
+            <li>Автоматический live-контроль инварианта баланса массы</li>
+            <li>Спасение выручки: уценка -40% и передача в кулинарию</li>
+            <li>Печать официальных актов ТОРГ-15/16 и желтых ценников</li>
+          </ul>
+        </div>
+      </div>
+      <span class="slide-number">02</span>
+    </section>
+
+    <!-- Слайд 3: Актуальность -->
+    <section class="slide dark">
+      <h2 class="slide-title step">Актуальность</h2>
+      <p class="quote step">«Без точного учета при сортировке гипермаркет теряет до 20% выручки от списания свежих продуктов с внешними дефектами.»</p>
+      <p class="problem step">Ручной бумажный учет приводит к ошибкам пересортицы и задержке актов.<br><br><span class="highlight">Система «Семейный» возвращает уцененный товар в оборот и полностью исключает расхождения веса.</span></p>
+      <span class="slide-number">03</span>
+    </section>
+
+    <!-- Слайд 4: Роли -->
+    <section class="slide cream">
+      <h2 class="slide-title step">Разграничение ролей (RBAC)</h2>
+      <div class="accent-line step"></div>
+      <div class="two-col">
+        <div class="step">
+          <div class="label">Безопасность и полномочия</div>
+          <p class="big-text">Каждый сотрудник получает персональный функционал согласно должностным обязанностям, с защитой от случайного удаления данных.</p>
+        </div>
+        <div class="roles step">
+          <div class="role-card">
+            <div class="role-name">Оператор сортировки <span class="role-badge">АРМ</span></div>
+            <div class="role-text">Сортирует партии, фиксирует веса по сортам, печатает маркировку.</div>
+          </div>
+          <div class="role-card">
+            <div class="role-name">Заведующий складом <span class="role-badge">Приёмка</span></div>
+            <div class="role-text">Принимает груз по ТТН, назначает складские зоны хранения.</div>
+          </div>
+          <div class="role-card">
+            <div class="role-name">Контролер ОТК <span class="role-badge">Качество</span></div>
+            <div class="role-text">Проводит инспекцию брака, ведет аналитику качества поставщиков.</div>
+          </div>
+          <div class="role-card">
+            <div class="role-name">Старший товаровед <span class="role-badge">Доступ</span></div>
+            <div class="role-text">Управляет SKU, розничными ценами, утверждает акты и сотрудников.</div>
+          </div>
+        </div>
+      </div>
+      <span class="slide-number">04</span>
+    </section>
+
+    <!-- Слайд 5: Процесс -->
+    <section class="slide">
+      <h2 class="slide-title step">Сквозной бизнес-процесс</h2>
+      <div class="accent-line step"></div>
+      <div class="flow step">
+        <div class="flow-item">
+          <span class="flow-number">Этап 1</span>
+          <b>1. Приёмка ТТН</b>
+          <span>Регистрация накладной и присвоение зоны хранения.</span>
+        </div>
+        <div class="flow-item">
+          <span class="flow-number">Этап 2</span>
+          <b>2. Сортировка</b>
+          <span>Разбор по 4 фракциям с проверкой инварианта массы.</span>
+        </div>
+        <div class="flow-item">
+          <span class="flow-number">Этап 3</span>
+          <b>3. Уценка & Акты</b>
+          <span>Расчет уценки -40% и генерация ТОРГ-15/16.</span>
+        </div>
+        <div class="flow-item">
+          <span class="flow-number">Этап 4</span>
+          <b>4. Торговый зал</b>
+          <span>Печать желтых ценников EAN-13 и реализация.</span>
+        </div>
+      </div>
+      <span class="slide-number">05</span>
+    </section>
+
+    <!-- Слайд 6: Технологии -->
+    <section class="slide cream">
+      <h2 class="slide-title step">Стек технологий</h2>
+      <div class="accent-line step"></div>
+      <table class="tech-table step">
+        <tbody>
+          <tr><td>React 19 / Vite</td><td>Реактивный высокоскоростной одностраничный интерфейс</td></tr>
+          <tr><td>TypeScript 5</td><td>Строгая типизация сущностей (Product, Batch, QualityAct)</td></tr>
+          <tr><td>Tailwind CSS v4</td><td>Современный адаптивный дизайн и верстка печатных бланков</td></tr>
+          <tr><td>Local Database</td><td>Автономное локальное хранилище данных и экспорт в HTML</td></tr>
+        </tbody>
+      </table>
+      <span class="slide-number">06</span>
+    </section>
+
+    <!-- Слайд 7: Демо транзишн (ФИНАЛЬНЫЙ) -->
+    <section class="slide demo-transition">
+      <div class="eyebrow step">Практическая часть</div>
+      <h1 class="step">Дeмонстрация системы</h1>
+      <p class="step">Переход к интерактивной работе с веб-сайтом гипермаркета «Семейный».</p>
+      <span class="slide-number">07</span>
+    </section>
+
+  </main>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    let index = 0, step = -1;
+    const progress = document.getElementById('progress');
+
+    function update() {
+      slides.forEach((s, i) => s.classList.toggle('active', i === index));
+      const steps = [...slides[index].querySelectorAll('.step')];
+      steps.forEach(x => x.classList.remove('shown'));
+      step = -1;
+      progress.style.width = `${((index) / (slides.length - 1)) * 100}%`;
+      showNext();
+    }
+
+    function showNext() {
+      const steps = [...slides[index].querySelectorAll('.step')];
+      if (step < steps.length - 1) {
+        steps[++step].classList.add('shown');
+        return true;
+      }
+      return false;
+    }
+
+    function next() {
+      if (!showNext() && index < slides.length - 1) {
+        index++;
+        update();
+      }
+    }
+
+    function prev() {
+      if (index > 0) {
+        index--;
+        update();
+        const steps = [...slides[index].querySelectorAll('.step')];
+        steps.forEach(x => x.classList.add('shown'));
+        step = steps.length - 1;
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        next();
+      }
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') next();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prev();
+    });
+
+    update();
+  </script>
+</body>
+</html>
