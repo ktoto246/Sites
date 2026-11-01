@@ -1,0 +1,277 @@
+/* css/dispatcher.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --primary: #f59e0b;
+    --primary-dark: #d97706;
+    --dark: #0f172a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ===== ФОН ===== */
+body {
+    background: url('../img/disp-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #f8fafc;
+    position: relative;
+    min-height: 100vh;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(30, 41, 59, 0.80) 100%);
+    z-index: -1;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+    background: rgba(15, 23, 42, 0.9) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 15px 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 1.1rem;
+    color: #fff !important;
+}
+
+/* ===== KPI CARDS ===== */
+.kpi-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s;
+}
+
+.kpi-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-3px);
+}
+
+.kpi-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+}
+
+.kpi-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #fff !important;
+    line-height: 1;
+}
+
+.kpi-label {
+    font-size: 0.85rem;
+    color: #cbd5e1 !important;
+    margin-top: 6px;
+    font-weight: 500;
+}
+
+/* ===== FILTER CHIPS ===== */
+.filter-chip {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #cbd5e1 !important;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.filter-chip:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff !important;
+}
+
+.filter-chip.active {
+    background: var(--primary);
+    color: var(--dark) !important;
+    border-color: var(--primary);
+}
+
+/* ===== ГЛАВНАЯ ПАНЕЛЬ ===== */
+.glass-panel {
+    background: rgba(15, 23, 42, 0.75) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+}
+
+/* ===== ТАБЛИЦА — ЖЁСТКОЕ ИСПРАВЛЕНИЕ ===== */
+/* Сбрасываем ВСЕ стили Bootstrap для таблицы внутри glass-panel */
+.glass-panel table,
+.glass-panel table *,
+.glass-panel .table,
+.glass-panel .table * {
+    color: #f1f5f9 !important;
+}
+
+/* ЗАГОЛОВКИ ТАБЛИЦЫ */
+.glass-panel table thead th,
+.glass-panel .table thead th {
+    background: rgba(0, 0, 0, 0.4) !important;
+    color: #94a3b8 !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 15px 20px;
+}
+
+/* СТРОКИ ТАБЛИЦЫ — ТЁМНЫЙ ФОН */
+.glass-panel table tbody tr,
+.glass-panel .table tbody tr {
+    background: rgba(30, 41, 59, 0.8) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    transition: background 0.2s;
+}
+
+.glass-panel table tbody tr:hover,
+.glass-panel .table tbody tr:hover {
+    background: rgba(51, 65, 85, 0.9) !important;
+}
+
+/* ЯЧЕЙКИ ТАБЛИЦЫ */
+.glass-panel table tbody td,
+.glass-panel .table tbody td {
+    padding: 18px 20px;
+    vertical-align: middle;
+    color: #f1f5f9 !important;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: transparent !important;
+}
+
+/* Особые цвета для конкретных элементов */
+.glass-panel table tbody td .fw-bold,
+.glass-panel .table tbody td .fw-bold {
+    color: #fff !important;
+    font-weight: 700 !important;
+}
+
+.glass-panel table tbody td .text-muted,
+.glass-panel .table tbody td .text-muted {
+    color: #94a3b8 !important;
+}
+
+.glass-panel table tbody td .text-warning,
+.glass-panel .table tbody td .text-warning,
+.glass-panel table tbody td .text-warning *,
+.glass-panel .table tbody td .text-warning * {
+    color: #fbbf24 !important;
+}
+
+.glass-panel table tbody td .text-end,
+.glass-panel .table tbody td .text-end {
+    color: #f1f5f9 !important;
+}
+
+/* ===== КНОПКИ В ТАБЛИЦЕ ===== */
+.btn-assign {
+    background: var(--primary) !important;
+    color: var(--dark) !important;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.btn-assign:hover {
+    background: var(--primary-dark) !important;
+    transform: translateY(-1px);
+}
+
+.btn-pickup {
+    background: #10b981 !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.btn-pickup:hover {
+    background: #059669 !important;
+    transform: translateY(-1px);
+}
+
+/* ===== BADGES ===== */
+.glass-panel .badge {
+    font-weight: 600;
+    padding: 6px 10px;
+}
+
+/* ===== MODAL ===== */
+.modal-content {
+    background: #1e293b !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    color: #fff !important;
+}
+
+.modal-title {
+    color: #fff !important;
+}
+
+.form-select {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff !important;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.form-select:focus {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+    color: #fff !important;
+}
+
+.form-select option {
+    background: #1e293b !important;
+    color: #fff !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .kpi-value { font-size: 1.4rem; }
+    .kpi-icon { width: 45px; height: 45px; font-size: 1.3rem; }
+    .glass-panel { padding: 15px !important; }
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Диспетчерская | МСК</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/dispatcher.css">
+</head>
+<body>
+
+<!-- Навигация -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+            <i class="bi bi-headset fs-4 text-warning"></i>
+            <span>Диспетчерская МСК</span>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-white-50 d-none d-md-block" id="dispName">Диспетчер: ...</span>
+            <button class="btn btn-outline-light btn-sm rounded-pill" onclick="logout()">
+                <i class="bi bi-box-arrow-right me-1"></i> Выйти
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Основной контент -->
+<div class="container py-4">
+    
+    <!-- KPI Дашборд -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="kpi-card">
+                <div class="kpi-icon bg-warning bg-opacity-10 text-warning">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <div class="kpi-info">
+                    <div class="kpi-value" id="kpiQueue">0</div>
+                    <div class="kpi-label">В очереди</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kpi-card">
+                <div class="kpi-icon bg-info bg-opacity-10 text-info">
+                    <i class="bi bi-truck"></i>
+                </div>
+                <div class="kpi-info">
+                    <div class="kpi-value" id="kpiDelivery">0</div>
+                    <div class="kpi-label">На доставку</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kpi-card">
+                <div class="kpi-icon bg-success bg-opacity-10 text-success">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div class="kpi-info">
+                    <div class="kpi-value" id="kpiPickup">0</div>
+                    <div class="kpi-label">На самовывоз</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Фильтры -->
+    <div class="d-flex gap-2 mb-3 flex-wrap" id="filterChips">
+        <button class="filter-chip active" data-filter="all">
+            <i class="bi bi-grid-3x3-gap me-1"></i> Все заказы
+        </button>
+        <button class="filter-chip" data-filter="delivery">
+            <i class="bi bi-truck me-1"></i> Доставка
+        </button>
+        <button class="filter-chip" data-filter="pickup">
+            <i class="bi bi-box-seam me-1"></i> Самовывоз
+        </button>
+    </div>
+
+    <!-- Таблица заказов -->
+    <div class="glass-panel p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0 fw-bold">Очередь заказов</h5>
+            <span class="badge bg-warning text-dark rounded-pill" id="orderCountBadge">0</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>№ Заказа</th>
+                        <th>Тип</th>
+                        <th>Адрес / Комментарий</th>
+                        <th>Сумма</th>
+                        <th class="text-end">Действие</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <!-- Рендерится через JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка назначения курьера -->
+<div class="modal fade" id="assignCourierModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Назначение курьера</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small mb-3">Выберите свободного курьера для заказа <strong id="modalOrderId"></strong></p>
+                <select id="courierSelect" class="form-select form-select-lg">
+                    <!-- Опции через JS -->
+                </select>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-warning fw-bold" onclick="confirmAssign()">
+                    <i class="bi bi-check-circle me-1"></i> Подтвердить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dispatcher.js"></script>
+</body>
+</html>
