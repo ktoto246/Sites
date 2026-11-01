@@ -1,0 +1,31 @@
+﻿@model IReadOnlyList<WebApplication1.Models.Entities.StockBatch>
+@using WebApplication1.Models.Entities
+@{
+    var part = (Part)ViewBag.Part; ViewData["Title"] = $"Партии: {part.Article}";
+}
+<div class="page-heading"><div><a asp-action="Index">← Склад</a><h1 class="page-title mt-2">Партии детали</h1><p class="page-subtitle">@part.Article — @part.Name</p></div></div>
+<div class="panel p-0 overflow-hidden">
+    @if (Model.Count == 0)
+    {
+        <div class="empty-list"><h2>Нет партий</h2></div>
+    }
+    else
+    {
+        <table class="table mb-0">
+            <thead><tr><th>ID Партии</th><th>Поступила</th><th>Цена</th><th>Доступно</th><th>Резерв</th><th></th></tr></thead>
+            <tbody>
+                @foreach (var batch in Model)
+                {
+                    <tr>
+                        <td>@batch.Id</td>
+                        <td>@batch.ReceivedAtUtc.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                        <td>@batch.UnitCost.ToString("N2") ₽</td>
+                        <td>@batch.AvailableQuantity.ToString("0.###") @part.Unit</td>
+                        <td>@batch.ReservedQuantity.ToString("0.###") @part.Unit</td>
+                        <td><a asp-action="Adjust" asp-route-batchId="@batch.Id" class="btn btn-sm btn-outline-danger">Акт списания / Инвентаризация</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

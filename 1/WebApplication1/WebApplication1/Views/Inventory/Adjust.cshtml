@@ -1,0 +1,20 @@
+﻿@model WebApplication1.ViewModels.StockAdjustmentViewModel
+@using WebApplication1.Models.Entities
+@{
+    ViewData["Title"] = "Корректировка остатков";
+}
+<div class="page-heading"><div><h1 class="page-title">Списание и корректировка</h1><p class="page-subtitle">Партия №@Model.StockBatchId · @Model.PartName</p></div></div>
+<div class="panel" style="max-width:600px">
+    <div class="alert alert-info">Доступно для списания: <strong>@Model.AvailableQuantity.ToString("0.###") @Model.Unit</strong></div>
+    <form asp-action="Adjust" method="post">
+        <input type="hidden" asp-for="StockBatchId" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3"><label asp-for="Type" class="form-label"></label><select asp-for="Type" class="form-select"><option value="WriteOff">Брак / Утрата (Списание)</option><option value="InventoryDecrease">Недостача (Инвентаризация)</option><option value="InventoryIncrease">Излишек (Инвентаризация)</option></select></div>
+        <div class="mb-3"><label asp-for="Quantity" class="form-label"></label><div class="input-group"><input asp-for="Quantity" class="form-control" type="number" step="0.001" min="0.001" /><span class="input-group-text">@Model.Unit</span></div><span asp-validation-for="Quantity" class="text-danger"></span></div>
+        <div class="mb-4"><label asp-for="Reason" class="form-label"></label><textarea asp-for="Reason" class="form-control" rows="3" placeholder="Укажите подробную причину корректировки"></textarea><span asp-validation-for="Reason" class="text-danger"></span></div>
+        <button class="btn btn-primary">Провести акт</button>
+    </form>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

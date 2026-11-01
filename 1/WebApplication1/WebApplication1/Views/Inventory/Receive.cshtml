@@ -1,0 +1,17 @@
+@model WebApplication1.Models.Entities.Purchase
+@{
+    ViewData["Title"] = "Приёмка закупки";
+}
+<div class="page-heading"><div><h1 class="page-title">Принять закупку №@Model.Id</h1><p class="page-subtitle">@Model.Supplier.Name</p></div><a asp-action="Purchases">К закупкам</a></div>
+<div class="panel" style="max-width:760px">
+    <p>На склад поступят все заказанные позиции. После приёмки операция не редактируется; исправления оформляются отдельными движениями.</p>
+    <ul>
+        @foreach (var line in Model.Lines)
+        {
+            <li>@line.Part.Name — <strong>@line.OrderedQuantity.ToString("0.###") @line.Part.Unit</strong> по @line.UnitPrice.ToString("N2") ₽</li>
+        }
+    </ul>
+    <form asp-action="Receive" asp-route-id="@Model.Id" method="post">
+        <button class="btn btn-primary mt-3">Подтвердить поступление</button>
+    </form>
+</div>

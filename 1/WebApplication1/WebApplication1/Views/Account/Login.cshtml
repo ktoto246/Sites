@@ -1,21 +1,19 @@
-@{ Layout = null; }
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Вход — АгроКонтроль</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-</head>
-<body class="login-page">
-    <main class="login-card">
-        <div class="login-brand"><span class="brand-mark"><span></span><span></span><span></span></span><span><strong>Агро</strong>Контроль<small>техобслуживание и ремонт</small></span></div>
-        <div class="login-heading"><h1>Вход в систему</h1><p>Укажите данные своей учётной записи.</p></div>
-        @if (ViewBag.Error is not null) { <div class="login-error">@ViewBag.Error</div> }
-        <form method="post" class="login-form"><div class="form-field"><label for="login">Логин</label><input id="login" name="login" autocomplete="username" required autofocus /></div><div class="form-field"><label for="password">Пароль</label><input id="password" name="password" type="password" autocomplete="current-password" required /></div><button class="btn btn-primary login-submit" type="submit">Войти <span>→</span></button></form>
-    </main>
-</body>
-</html>
+@model WebApplication1.ViewModels.LoginViewModel
+@{ ViewData["Title"] = "Вход"; }
+<div class="auth-page">
+    <section class="auth-card" aria-labelledby="login-title">
+        <span class="welcome-kicker">АгроСервис</span>
+        <h1 id="login-title">Вход в систему</h1>
+        <p>Введите данные своей учётной записи.</p>
+        <form asp-action="Login" method="post">
+            <input asp-for="ReturnUrl" type="hidden" />
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+            <div class="mb-3"><label asp-for="UserName" class="form-label"></label><input asp-for="UserName" class="form-control" autocomplete="username" autofocus /><span asp-validation-for="UserName" class="text-danger"></span></div>
+            <div class="mb-3"><label asp-for="Password" class="form-label"></label><input asp-for="Password" class="form-control" autocomplete="current-password" /><span asp-validation-for="Password" class="text-danger"></span></div>
+            <div class="form-check mb-4"><input asp-for="RememberMe" class="form-check-input" /><label asp-for="RememberMe" class="form-check-label"></label></div>
+            <button class="btn btn-primary w-100" type="submit">Войти</button>
+        </form>
+        <aside class="demo-accounts"><strong>Учебные учётные записи</strong><span>admin, dispatcher, driver, mechanic</span><span>Общий пароль: <code>Demo123!</code></span></aside>
+    </section>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

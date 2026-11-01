@@ -1,5 +1,83 @@
-@model List<MaintenanceRequest>
-@{ ViewData["Title"] = "Заявки"; var role = ViewData["Role"]?.ToString() ?? "dispatcher"; }
-<div class="page-heading animate-in"><div><span class="eyebrow accent">ОПЕРАТИВНЫЙ ЖУРНАЛ</span><h1>Заявки на ремонт</h1><p>Контроль неисправностей, сроков и ответственных специалистов.</p></div>@if (role != "mechanic") { <div class="heading-actions"><a class="btn btn-primary" asp-action="Create">＋ Новая заявка</a></div> }</div>
-<div class="toolbar animate-in"><form method="get" class="search-box"><span>⌕</span><input name="search" value="@ViewBag.Search" placeholder="Поиск по заявке или технике..." /></form><div class="request-tabs"><a class="@(string.IsNullOrEmpty(ViewBag.Status) ? "active" : "")">Все <b>@Model.Count</b></a><a class="@(ViewBag.Status == "Новая" ? "active" : "")" asp-route-status="Новая">Новые</a><a class="@(ViewBag.Status == "В работе" ? "active" : "")" asp-route-status="В работе">В работе</a><a class="@(ViewBag.Status == "Ожидает запчасти" ? "active" : "")" asp-route-status="Ожидает запчасти">Ожидают детали</a><a class="@(ViewBag.Status == "Завершена" ? "active" : "")" asp-route-status="Завершена">Завершённые</a></div></div>
-<div class="panel table-panel animate-in"><table class="data-table request-table"><thead><tr><th>Заявка</th><th>Техника</th><th>Приоритет</th><th>Ответственный</th><th>Дата</th><th>Статус</th><th></th></tr></thead><tbody>@foreach (var item in Model) { <tr><td><div class="request-cell"><span class="request-id">#@item.Id.ToString("000")</span><span><a class="request-title-link" asp-action="Details" asp-route-id="@item.Id">@item.Title</a><small>@item.Description</small></span></div></td><td><strong>@item.Equipment?.Brand @item.Equipment?.Model</strong><small class="table-sub">@item.Equipment?.InventoryNumber</small></td><td><span class="priority-label priority-@(item.Priority == "Высокий" ? "high" : item.Priority == "Средний" ? "medium" : "low")">● @item.Priority</span></td><td>@(item.Mechanic?.FullName ?? "Не назначен")</td><td>@item.ReportedAt.ToString("dd.MM.yy")</td><td><span class="status status-@item.Status.Replace(" ", "-")">@item.Status</span></td><td><a class="row-action" asp-action="Details" asp-route-id="@item.Id">Открыть →</a></td></tr> }</tbody></table></div>
+@model IReadOnlyList<WebApplication1.ViewModels.RepairRequestListItemViewModel>
+@using WebApplication1.Models.Entities
+@{
+    ViewData["Title"] = "Заявки";
+    var dispatcher = User.IsInRole(AppRoles.Administrator) || User.IsInRole(AppRoles.Dispatcher);
+}
+
+<div class="page-heading">
+    <div>
+        <h1 class="page-title">Заявки о неисправностях</h1>
+        <p class="page-subtitle">Обращения трактористов и ход их обработки.</p>
+    </div>
+    @if (User.IsInRole(AppRoles.TractorDriver))
+    {
+        <a asp-action="Create" class="btn btn-primary">Сообщить о поломке</a>
+    }
+</div>
+
+<div class="panel p-0 overflow-hidden">
+    @if (Model.Count == 0)
+    {
+        <div class="empty-list">
+            <h2>Заявок пока нет</h2>
+            <p>Когда тракторист сообщит о неисправности, она появится здесь.</p>
+            @if (User.IsInRole(AppRoles.TractorDriver))
+            {
+                <a asp-action="Create" class="btn btn-primary">Создать заявку</a>
+            }
+        </div>
+    }
+    else
+    {
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Техника</th>
+                    <th>Описание</th>
+                    <th>Статус</th>
+                    <th>Создана</th>
+                    <th>Ожидаемое завершение</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>
+                            <div class="fw-bold">@item.EquipmentName</div>
+                            @if (dispatcher && item.Status == RequestStatus.New && item.HasDuplicateWarning)
+                            {
+                                <div class="text-danger small mt-1">⚠️ Техника уже в ремонте или есть другие заявки</div>
+                            }
+                        </td>
+                        <td>@item.Description</td>
+                        <td>
+                            <span class="status-pill status-@item.Status.ToString().ToLowerInvariant()">
+                                @(item.Status switch { RequestStatus.New => "Новая", RequestStatus.Accepted => "Принята", RequestStatus.Rejected => "Отклонена", RequestStatus.Cancelled => "Отменена", _ => item.Status.ToString() })
+                            </span>
+                        </td>
+                        <td>@item.CreatedAtUtc.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@(item.PlannedEndUtc?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "Срок уточняется")</td>
+                        <td>
+                            @if (dispatcher && item.Status == RequestStatus.New)
+                            {
+                                <div class="d-grid gap-1">
+                                    <a asp-controller="WorkOrders" asp-action="Create" asp-route-requestId="@item.Id" class="btn btn-sm btn-primary">Создать наряд</a>
+                                    <button class="btn btn-sm btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#reject-@item.Id">Отклонить</button>
+                                    <form id="reject-@item.Id" class="collapse" asp-action="Reject" asp-route-id="@item.Id" method="post">
+                                        <input name="reason" class="form-control form-control-sm mt-1" required placeholder="Причина" />
+                                        <button class="btn btn-sm btn-outline-danger w-100 mt-1">Подтвердить</button>
+                                    </form>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

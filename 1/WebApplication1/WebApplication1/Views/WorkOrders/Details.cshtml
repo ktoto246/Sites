@@ -1,0 +1,250 @@
+@model WebApplication1.ViewModels.WorkOrderDetailsViewModel
+@using WebApplication1.Models.Entities
+
+@{
+    var order = Model.WorkOrder;
+    ViewData["Title"] = $"Наряд №{order.Id}";
+    var canManage = User.IsInRole(AppRoles.Administrator) || User.IsInRole(AppRoles.Dispatcher);
+    var canWork = canManage || User.IsInRole(AppRoles.Mechanic);
+}
+
+<div class="page-heading">
+    <div>
+        <a asp-action="Index">← Все работы</a>
+        <h1 class="page-title mt-2">@order.Title</h1>
+        <p class="page-subtitle">
+            @order.Equipment.InventoryNumber — @order.Equipment.Model · Наряд №@order.Id
+        </p>
+    </div>
+    <span class="status-pill status-@order.Status.ToString().ToLowerInvariant()">
+        @(order.Status switch
+        {
+            WorkOrderStatus.Planned => "Запланирован",
+            WorkOrderStatus.InProgress => "В работе",
+            WorkOrderStatus.WaitingForParts => "Ожидает детали",
+            WorkOrderStatus.Completed => "Завершён",
+            WorkOrderStatus.Cancelled => "Отменён",
+            _ => order.Status.ToString()
+        })
+    </span>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <section class="panel mb-4">
+            <h2 class="h5">Описание работ</h2>
+            <p>@(order.Description ?? "Описание не указано.")</p>
+            <dl class="detail-list">
+                <div>
+                    <dt>Плановое начало</dt>
+                    <dd>@(order.PlannedStartUtc?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "Не назначено")</dd>
+                </div>
+                <div>
+                    <dt>Ожидаемое завершение</dt>
+                    <dd>@(order.PlannedEndUtc?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "Срок уточняется")</dd>
+                </div>
+                <div>
+                    <dt>Механики</dt>
+                    <dd>
+                        @string.Join(", ", order.Stages
+                            .SelectMany(x => x.Assignments)
+                            .Where(x => !x.IsCancelled)
+                            .Select(x => x.Employee.FullName)
+                            .Distinct())
+                    </dd>
+                </div>
+            </dl>
+        </section>
+
+        <section class="panel mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="h5 mb-0">Потребность в деталях</h2>
+            </div>
+
+            @if (Model.Requirements.Count == 0)
+            {
+                <p class="text-muted mt-3">Детали пока не запрошены.</p>
+            }
+            else
+            {
+                <div class="table-responsive mt-3">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Деталь</th>
+                                <th>Нужно</th>
+                                <th>Резерв</th>
+                                <th>Списано</th>
+                                <th>Статус</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var need in Model.Requirements)
+                            {
+                                <tr>
+                                    <td>@(need.PartId != null ? need.Part.Name : $"⚠️ Свободный запрос: {need.CustomName}")</td>
+                                    <td>@need.Quantity.ToString("0.###") @(need.PartId != null ? need.Part.Unit : "шт.")</td>
+                                    <td>@need.ReservedQuantity.ToString("0.###") @(need.PartId != null ? need.Part.Unit : "шт.")</td>
+                                    <td>@need.IssuedQuantity.ToString("0.###") @(need.PartId != null ? need.Part.Unit : "шт.")</td>
+                                    <td>
+                                        @(need.Status == RequirementStatus.Fulfilled ? "Обеспечена" : need.Status == RequirementStatus.Cancelled ? "Отменена" : "Открыта")
+                                    </td>
+                                    <td>
+                                        @if (canManage && need.PartId == null)
+                                        {
+                                            <form asp-action="BindCustomRequirement" asp-route-id="@need.Id" method="post" class="mb-1">
+                                                <div class="input-group input-group-sm">
+                                                    <select name="realPartId" class="form-select" asp-items="ViewBag.Parts" required>
+                                                        <option value="">Привязать деталь...</option>
+                                                    </select>
+                                                    <button class="btn btn-success">✔</button>
+                                                </div>
+                                            </form>
+                                        }
+                                        @if (canManage && need.Status == RequirementStatus.Open && need.PartId != null)
+                                        {
+                                            <form asp-action="ReserveRequirement" asp-route-id="@need.Id" method="post" class="mb-1">
+                                                <button class="btn btn-sm btn-outline-primary w-100">Резервировать</button>
+                                            </form>
+                                        }
+                                        @if (canWork && need.Status == RequirementStatus.Fulfilled && need.IssuedQuantity < need.ReservedQuantity)
+                                        {
+                                            <form asp-action="UseRequirement" asp-route-id="@need.Id" method="post" class="mb-1">
+                                                <button class="btn btn-sm btn-primary w-100">Списать в ремонт</button>
+                                            </form>
+                                        }
+                                        @if (canWork && need.IssuedQuantity > 0 && order.Status is not WorkOrderStatus.Completed and not WorkOrderStatus.Cancelled)
+                                        {
+                                            <form asp-action="ReturnRequirement" asp-route-id="@need.Id" method="post" class="d-flex gap-1 mb-1">
+                                                <input type="number" name="returnQuantity" class="form-control form-control-sm" step="0.001" min="0.001" max="@need.IssuedQuantity.ToString("0.###".Replace(',', '.'))" placeholder="Кол-во" required style="width: 70px;" />
+                                                <button class="btn btn-sm btn-outline-warning flex-grow-1">Вернуть</button>
+                                            </form>
+                                        }
+                                        @if (canManage && need.IssuedQuantity == 0 && need.Status != RequirementStatus.Cancelled && order.Status is not WorkOrderStatus.Completed and not WorkOrderStatus.Cancelled)
+                                        {
+                                            <form asp-action="CancelRequirement" asp-route-id="@need.Id" method="post">
+                                                <button class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Отменить потребность и снять резерв?')">Отменить</button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            @if (canWork && order.Status is not WorkOrderStatus.Completed and not WorkOrderStatus.Cancelled)
+            {
+                <form asp-action="AddRequirement" asp-route-id="@order.Id" method="post" class="border-top pt-3 mt-3">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <select name="PartId" asp-items="ViewBag.Parts" class="form-select mb-2">
+                                <option value="">-- Выбрать из базы --</option>
+                            </select>
+                            <input type="text" name="CustomName" class="form-control" placeholder="ИЛИ напишите название текстом" />
+                        </div>
+                        <div class="col-md-3">
+                            <input name="Quantity" class="form-control mb-2" type="number" step="0.001" min="0.001" placeholder="Кол-во" required />
+                            <button class="btn btn-primary w-100">Запросить</button>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <input name="Comment" class="form-control" placeholder="Комментарий для диспетчера" />
+                        </div>
+                    </div>
+                </form>
+            }
+        </section>
+
+        <section class="panel">
+            <h2 class="h5">Журнал работ</h2>
+            @if (Model.Logs.Count == 0)
+            {
+                <p class="text-muted mb-0">Записей пока нет.</p>
+            }
+            else
+            {
+                <ul class="activity-list">
+                    @foreach (var log in Model.Logs)
+                    {
+                        <li>
+                            <strong>@log.Employee.FullName</strong>
+                            <span>@log.CreatedAtUtc.ToLocalTime().ToString("dd.MM HH:mm")</span>
+                            <p>@log.Description</p>
+                        </li>
+                    }
+                </ul>
+            }
+        </section>
+    </div>
+
+    <aside class="col-lg-4">
+        <section class="panel">
+            <h2 class="h5">Действия</h2>
+
+            @if (order.Status == WorkOrderStatus.Planned && canWork)
+            {
+                <form asp-action="Start" asp-route-id="@order.Id" method="post" class="mb-2">
+                    <button class="btn btn-primary w-100">Начать работу</button>
+                </form>
+            }
+
+            @if (order.Status == WorkOrderStatus.InProgress && canWork)
+            {
+                <form asp-action="WaitForParts" asp-route-id="@order.Id" method="post" class="mb-2">
+                    <button class="btn btn-outline-secondary w-100">Ожидать детали</button>
+                </form>
+
+                <form asp-action="Complete" asp-route-id="@order.Id" method="post" class="border-top pt-3 mt-3">
+                    <label class="form-label">Результат ремонта</label>
+                    <textarea class="form-control mb-2" name="Result" required></textarea>
+
+                    <label class="form-label">Моточасы после работ</label>
+                    <input class="form-control mb-2" name="EngineHours" type="number" step="0.1" min="0" value="@order.Equipment.EngineHours" required />
+
+                    <button class="btn btn-primary w-100">Завершить ремонт</button>
+                </form>
+            }
+
+            @if (order.Status == WorkOrderStatus.WaitingForParts && canManage)
+            {
+                <form asp-action="PlanNextStage" asp-route-id="@order.Id" method="post" class="border-top pt-3 mt-3">
+                    <h3 class="h6">Возобновить ремонт</h3>
+
+                    <label class="form-label">Начало</label>
+                    <input class="form-control mb-2" type="datetime-local" name="PlannedStartLocal"
+                           value="@DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm")" required />
+
+                    <label class="form-label">Окончание</label>
+                    <input class="form-control mb-2" type="datetime-local" name="PlannedEndLocal"
+                           value="@DateTime.Now.AddHours(5).ToString("yyyy-MM-ddTHH:mm")" required />
+
+                    <label class="form-label">Механики</label>
+                    <select class="form-select mb-2" name="MechanicIds" asp-items="ViewBag.Mechanics" multiple required></select>
+
+                    <button class="btn btn-primary w-100">Назначить этап</button>
+                </form>
+            }
+
+            @if (canManage && order.Status is not WorkOrderStatus.Completed and not WorkOrderStatus.Cancelled)
+            {
+                <form asp-action="Cancel" asp-route-id="@order.Id" method="post" class="mt-3">
+                    <label class="form-label" for="reason">Причина отмены</label>
+                    <textarea id="reason" name="reason" class="form-control mb-2" required></textarea>
+                    <button class="btn btn-outline-danger w-100">Отменить наряд</button>
+                </form>
+            }
+
+            @if (canManage && order.Status == WorkOrderStatus.Completed)
+            {
+                <form asp-action="Reopen" asp-route-id="@order.Id" method="post" class="border-top pt-3 mt-3">
+                    <h3 class="h6 text-danger">Ошибка в закрытом наряде?</h3>
+                    <p class="small text-muted mb-2">Наряд вернётся в статус ожидания, чтобы можно было назначить новый рабочий этап и списать забытые детали.</p>
+                    <textarea name="reason" class="form-control mb-2" placeholder="Причина переоткрытия" required></textarea>
+                    <button class="btn btn-outline-danger w-100" onclick="return confirm('Точно переоткрыть наряд?')">Возобновить ремонт</button>
+                </form>
+            }
+        </section>
+    </aside>
+</div>

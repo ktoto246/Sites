@@ -1,43 +1,48 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
+using WebApplication1.Models.Entities;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controllers;
 
-public class AccountController : Controller
+public sealed class AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ApplicationDbContext db) : Controller
 {
-    private readonly AppDbContext _db;
-    public AccountController(AppDbContext db) => _db = db;
+    [AllowAnonymous]
+    public IActionResult Login(string? returnUrl = null) => View(new LoginViewModel { ReturnUrl = returnUrl });
 
-    [HttpGet]
-    public IActionResult Login()
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Login(LoginViewModel model)
     {
-        if (HttpContext.Session.GetInt32("EmployeeId").HasValue) return RedirectToAction("Index", "Home");
-        return View();
+        if (!ModelState.IsValid) return View(model);
+
+        var user = await userManager.FindByNameAsync(model.UserName.Trim());
+        var isActive = user?.EmployeeId is int employeeId && await db.Employees.IgnoreQueryFilters().AnyAsync(employee => employee.Id == employeeId && employee.IsActive);
+        if (!isActive)
+        {
+            ModelState.AddModelError(string.Empty, "Неверный логин или пароль.");
+            return View(model);
+        }
+
+        var result = await signInManager.PasswordSignInAsync(user!, model.Password, model.RememberMe, lockoutOnFailure: true);
+        if (result.Succeeded) return LocalRedirect(Url.IsLocalUrl(model.ReturnUrl) ? model.ReturnUrl! : Url.Action("Index", "Home")!);
+        ModelState.AddModelError(string.Empty, result.IsLockedOut ? "Учётная запись временно заблокирована." : "Неверный логин или пароль.");
+        return View(model);
     }
 
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(string login, string password)
+    public async Task<IActionResult> Logout()
     {
-        var employee = await _db.Employees.FirstOrDefaultAsync(x => x.Login == login && x.Password == password && x.IsActive);
-        if (employee is null)
-        {
-            ViewBag.Error = "Неверный логин, пароль или учётная запись отключена.";
-            return View();
-        }
-
-        HttpContext.Session.SetInt32("EmployeeId", employee.Id);
-        HttpContext.Session.SetString("Role", employee.Role);
-        HttpContext.Session.SetString("EmployeeName", employee.FullName);
+        await signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Logout()
-    {
-        HttpContext.Session.Clear();
-        return RedirectToAction(nameof(Login));
-    }
+    [AllowAnonymous]
+    public IActionResult AccessDenied() => View();
 }

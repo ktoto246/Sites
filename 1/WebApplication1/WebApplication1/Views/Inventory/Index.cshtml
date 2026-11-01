@@ -1,0 +1,54 @@
+@model IReadOnlyList<WebApplication1.ViewModels.PartStockListItemViewModel>
+@{
+    ViewData["Title"] = "Детали и склад";
+
+    // Выносим формат чисел в константу для единообразия и легкой поддержки
+    const string NumberFormat = "0.###";
+}
+
+<div class="page-heading">
+    <div>
+        <h1 class="page-title">@ViewData["Title"]</h1>
+        <p class="page-subtitle">Остатки закупленных деталей, доступные для ремонта.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Purchases" class="btn btn-outline-secondary">Закупки</a>
+        <a asp-action="CreatePurchase" class="btn btn-outline-secondary">Оформить закупку</a>
+        <a asp-action="CreatePart" class="btn btn-primary">Добавить деталь</a>
+    </div>
+</div>
+
+<div class="panel p-0 overflow-hidden">
+    @if (!Model.Any())
+    {
+        <div class="empty-list">
+            <h2>Деталей пока нет</h2>
+            <p>Добавьте первую позицию номенклатуры.</p>
+        </div>
+    }
+    else
+    {
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Артикул</th>
+                    <th>Деталь</th>
+                    <th>Доступно</th>
+                    <th>В резерве</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var part in Model)
+                {
+                    <tr>
+                        <td>@part.Article</td>
+                        <td>@part.Name<small class="d-block text-muted">@part.Unit</small></td>
+                        <td>@part.Available.ToString("0.###") @part.Unit</td>
+                        <td>@part.Reserved.ToString("0.###") @part.Unit</td>
+                        <td class="text-end"><a asp-action="Batches" asp-route-partId="@part.Id" class="btn btn-sm btn-outline-primary">Партии и акты</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

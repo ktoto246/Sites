@@ -1,0 +1,117 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|d:\\github\\\u043A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\webapplication1\\webapplication1\\controllers\\inventorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\inventorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|d:\\github\\\u043A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\webapplication1\\webapplication1\\views\\workorders\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\views\\workorders\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|d:\\github\\\u043A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\webapplication1\\webapplication1\\controllers\\workorderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\workorderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|d:\\github\\\u043A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\webapplication1\\webapplication1\\viewmodels\\workorderviewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\viewmodels\\workorderviewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|d:\\github\\\u043A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\webapplication1\\webapplication1\\models\\entities\\inventoryentities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\entities\\inventoryentities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|d:\\github\\\u043A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\webapplication1\\webapplication1\\models\\entities\\coreentities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\entities\\coreentities.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "InventoryController.cs",
+              "DocumentMoniker": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\WebApplication1\\Controllers\\InventoryController.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\InventoryController.cs",
+              "ToolTip": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\WebApplication1\\Controllers\\InventoryController.cs",
+              "RelativeToolTip": "WebApplication1\\Controllers\\InventoryController.cs",
+              "ViewState": "AgIAAIUAAAAAAAAAAAAiwJkAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-27T09:09:46.243Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\WebApplication1\\Views\\WorkOrders\\Details.cshtml",
+              "RelativeDocumentMoniker": "WebApplication1\\Views\\WorkOrders\\Details.cshtml",
+              "ToolTip": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\WebApplication1\\Views\\WorkOrders\\Details.cshtml",
+              "RelativeToolTip": "WebApplication1\\Views\\WorkOrders\\Details.cshtml",
+              "ViewState": "AgIAAN8AAAAAAAAAAAAQwPkAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-10-27T08:56:23.406Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "WorkOrdersController.cs",
+              "DocumentMoniker": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\WebApplication1\\Controllers\\WorkOrdersController.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\WorkOrdersController.cs",
+              "ToolTip": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\WebApplication1\\Controllers\\WorkOrdersController.cs",
+              "RelativeToolTip": "WebApplication1\\Controllers\\WorkOrdersController.cs",
+              "ViewState": "AgIAALMAAAAAAAAAAAAowNgAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-27T08:55:42.264Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "WorkOrderViewModels.cs",
+              "DocumentMoniker": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\WebApplication1\\ViewModels\\WorkOrderViewModels.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\ViewModels\\WorkOrderViewModels.cs",
+              "ToolTip": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\WebApplication1\\ViewModels\\WorkOrderViewModels.cs",
+              "RelativeToolTip": "WebApplication1\\ViewModels\\WorkOrderViewModels.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAhwCsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-27T08:55:11.689Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "InventoryEntities.cs",
+              "DocumentMoniker": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\WebApplication1\\Models\\Entities\\InventoryEntities.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Models\\Entities\\InventoryEntities.cs",
+              "ToolTip": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\WebApplication1\\Models\\Entities\\InventoryEntities.cs",
+              "RelativeToolTip": "WebApplication1\\Models\\Entities\\InventoryEntities.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAAABoAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-27T08:52:39.134Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CoreEntities.cs",
+              "DocumentMoniker": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\WebApplication1\\Models\\Entities\\CoreEntities.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Models\\Entities\\CoreEntities.cs",
+              "ToolTip": "D:\\GitHub\\\u041A\u0443\u0440\u0441\u043E\u0432\u044B\u0435\\1\\WebApplication1\\WebApplication1\\Models\\Entities\\CoreEntities.cs",
+              "RelativeToolTip": "WebApplication1\\Models\\Entities\\CoreEntities.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-27T08:52:05.648Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
